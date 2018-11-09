@@ -9,10 +9,11 @@
 import Foundation
 import ScreenSaver
 
+// swiftlint:disable:next type_body_length
 class Preferences {
-    
+
     // MARK: - Types
-    
+
     fileprivate enum Identifiers: String {
         case differentAerialsOnEachDisplay = "differentAerialsOnEachDisplay"
         case multiMonitorMode = "multiMonitorMode"
@@ -53,58 +54,80 @@ class Preferences {
         case dimOnlyAtNight = "dimOnlyAtNight"
         case dimOnlyOnBattery = "dimOnlyOnBattery"
         case dimInMinutes = "dimInMinutes"
+        case overrideDimInMinutes = "overrideDimInMinutes"
+        case solarMode = "solarMode"
+
+        case overrideMargins = "overrideMargins"
+        case marginX = "marginX"
+        case marginY = "marginY"
+
+        case alternateVideoFormat = "alternateVideoFormat"
+        case overrideOnBattery = "overrideOnBattery"
+        case powerSavingOnLowBattery = "powerSavingOnLowBattery"
+
+        case darkModeNightOverride = "darkModeNightOverride"
     }
-    
-    enum VersionCheck : Int {
+
+    enum SolarMode: Int {
+        case strict, official, civil, nautical, astronomical
+    }
+
+    enum VersionCheck: Int {
         case never, daily, weekly, monthly
     }
-    
-    enum ExtraCorner : Int {
+
+    enum ExtraCorner: Int {
         case same, hOpposed, dOpposed
     }
-    enum DescriptionCorner : Int {
+
+    enum DescriptionCorner: Int {
         case topLeft, topRight, bottomLeft, bottomRight, random
     }
-    
-    enum FadeMode : Int {
+
+    enum FadeMode: Int {
+        // swiftlint:disable:next identifier_name
         case disabled, t0_5, t1, t2
     }
-    
-    enum MultiMonitorMode : Int {
+
+    enum MultiMonitorMode: Int {
         case mainOnly, mirrored, independant
     }
-    
-    enum TimeMode : Int {
+
+    enum TimeMode: Int {
         case disabled, nightShift, manual, lightDarkMode, coordinates
     }
-    
-    enum VideoFormat : Int {
+
+    enum VideoFormat: Int {
         case v1080pH264, v1080pHEVC, v4KHEVC
     }
-    
-    enum DescriptionMode : Int {
+
+    enum AlternateVideoFormat: Int {
+        case powerSaving, v1080pH264, v1080pHEVC, v4KHEVC
+    }
+
+    enum DescriptionMode: Int {
         case fade10seconds, always
     }
-    
+
     static let sharedInstance = Preferences()
-    
+
     lazy var userDefaults: UserDefaults = {
         let module = "com.JohnCoates.Aerial"
-        
+
         guard let userDefaults = ScreenSaverDefaults(forModuleWithName: module) else {
             warnLog("Couldn't create ScreenSaverDefaults, creating generic UserDefaults")
             return UserDefaults()
         }
-        
+
         return userDefaults
     }()
-    
+
     // MARK: - Setup
-    
+
     init() {
         registerDefaultValues()
     }
-    
+
     func registerDefaultValues() {
         var defaultValues = [Identifiers: Any]()
         defaultValues[.differentAerialsOnEachDisplay] = false
@@ -144,19 +167,71 @@ class Preferences {
         defaultValues[.dimOnlyAtNight] = false
         defaultValues[.dimOnlyOnBattery] = false
         defaultValues[.dimInMinutes] = 30
+        defaultValues[.overrideDimInMinutes] = false
+        defaultValues[.solarMode] = SolarMode.official
+        defaultValues[.overrideMargins] = false
+        defaultValues[.marginX] = 50
+        defaultValues[.marginY] = 50
+        defaultValues[.overrideOnBattery] = false
+        defaultValues[.powerSavingOnLowBattery] = false
+        defaultValues[.alternateVideoFormat] = AlternateVideoFormat.powerSaving
+        defaultValues[.darkModeNightOverride] = false
 
-        let defaults = defaultValues.reduce([String: Any]()) {
-            (result, pair:(key: Identifiers, value: Any)) -> [String: Any] in
+        let defaults = defaultValues.reduce([String: Any]()) { (result, pair:(key: Identifiers, value: Any)) -> [String: Any] in
             var mutable = result
             mutable[pair.key.rawValue] = pair.value
             return mutable
         }
-        
+
         userDefaults.register(defaults: defaults)
     }
-    
+
     // MARK: - Variables
-    
+    var alternateVideoFormat: Int? {
+        get {
+            return optionalValue(forIdentifier: .alternateVideoFormat)
+        }
+        set {
+            setValue(forIdentifier: .alternateVideoFormat, value: newValue)
+        }
+    }
+
+    var overrideDimInMinutes: Bool {
+        get {
+            return value(forIdentifier: .overrideDimInMinutes)
+        }
+        set {
+            setValue(forIdentifier: .overrideDimInMinutes, value: newValue)
+        }
+    }
+
+    var darkModeNightOverride: Bool {
+        get {
+            return value(forIdentifier: .darkModeNightOverride)
+        }
+        set {
+            setValue(forIdentifier: .darkModeNightOverride, value: newValue)
+        }
+    }
+
+    var overrideOnBattery: Bool {
+        get {
+            return value(forIdentifier: .overrideOnBattery)
+        }
+        set {
+            setValue(forIdentifier: .overrideOnBattery, value: newValue)
+        }
+    }
+
+    var powerSavingOnLowBattery: Bool {
+        get {
+            return value(forIdentifier: .powerSavingOnLowBattery)
+        }
+        set {
+            setValue(forIdentifier: .powerSavingOnLowBattery, value: newValue)
+        }
+    }
+
     var useCommunityDescriptions: Bool {
         get {
             return value(forIdentifier: .useCommunityDescriptions)
@@ -192,7 +267,16 @@ class Preferences {
             setValue(forIdentifier: .dimOnlyOnBattery, value: newValue)
         }
     }
-    
+
+    var overrideMargins: Bool {
+        get {
+            return value(forIdentifier: .overrideMargins)
+        }
+        set {
+            setValue(forIdentifier: .overrideMargins, value: newValue)
+        }
+    }
+
     var dimInMinutes: Int? {
         get {
             return optionalValue(forIdentifier: .dimInMinutes)
@@ -201,7 +285,34 @@ class Preferences {
             setValue(forIdentifier: .dimInMinutes, value: newValue)
         }
     }
-    
+
+    var marginX: Int? {
+        get {
+            return optionalValue(forIdentifier: .marginX)
+        }
+        set {
+            setValue(forIdentifier: .marginX, value: newValue)
+        }
+    }
+
+    var marginY: Int? {
+        get {
+            return optionalValue(forIdentifier: .marginY)
+        }
+        set {
+            setValue(forIdentifier: .marginY, value: newValue)
+        }
+    }
+
+    var solarMode: Int? {
+        get {
+            return optionalValue(forIdentifier: .solarMode)
+        }
+        set {
+            setValue(forIdentifier: .solarMode, value: newValue)
+        }
+    }
+
     var debugMode: Bool {
         get {
             return value(forIdentifier: .debugMode)
@@ -210,7 +321,7 @@ class Preferences {
             setValue(forIdentifier: .debugMode, value: newValue)
         }
     }
-    
+
     var logToDisk: Bool {
         get {
             return value(forIdentifier: .logToDisk)
@@ -220,7 +331,7 @@ class Preferences {
         }
     }
 
-    var alsoVersionCheckBeta : Bool {
+    var alsoVersionCheckBeta: Bool {
         get {
             return value(forIdentifier: .alsoVersionCheckBeta)
         }
@@ -237,7 +348,7 @@ class Preferences {
             setValue(forIdentifier: .showClock, value: newValue)
         }
     }
-    
+
     var withSeconds: Bool {
         get {
             return value(forIdentifier: .withSeconds)
@@ -246,7 +357,7 @@ class Preferences {
             setValue(forIdentifier: .withSeconds, value: newValue)
         }
     }
-    
+
     var showMessage: Bool {
         get {
             return value(forIdentifier: .showMessage)
@@ -264,7 +375,7 @@ class Preferences {
             setValue(forIdentifier: .latitude, value: newValue)
         }
     }
-    
+
     var longitude: String? {
         get {
             return optionalValue(forIdentifier: .longitude)
@@ -273,7 +384,7 @@ class Preferences {
             setValue(forIdentifier: .longitude, value: newValue)
         }
     }
-    
+
     var showMessageString: String? {
         get {
             return optionalValue(forIdentifier: .showMessageString)
@@ -282,7 +393,7 @@ class Preferences {
             setValue(forIdentifier: .showMessageString, value: newValue)
         }
     }
-    
+
     var differentAerialsOnEachDisplay: Bool {
         get {
             return value(forIdentifier: .differentAerialsOnEachDisplay)
@@ -291,7 +402,7 @@ class Preferences {
             setValue(forIdentifier: .differentAerialsOnEachDisplay, value: newValue)
         }
     }
-    
+
     var cacheAerials: Bool {
         get {
             return value(forIdentifier: .cacheAerials)
@@ -300,7 +411,7 @@ class Preferences {
             setValue(forIdentifier: .cacheAerials, value: newValue)
         }
     }
-    
+
     var neverStreamVideos: Bool {
         get {
             return value(forIdentifier: .neverStreamVideos)
@@ -309,7 +420,7 @@ class Preferences {
             setValue(forIdentifier: .neverStreamVideos, value: newValue)
         }
     }
-    
+
     var neverStreamPreviews: Bool {
         get {
             return value(forIdentifier: .neverStreamPreviews)
@@ -327,7 +438,7 @@ class Preferences {
             setValue(forIdentifier: .localizeDescriptions, value: newValue)
         }
     }
-    
+
     var fontName: String? {
         get {
             return optionalValue(forIdentifier: .fontName)
@@ -354,7 +465,7 @@ class Preferences {
             setValue(forIdentifier: .endDim, value: newValue)
         }
     }
-    
+
     var fontSize: Double? {
         get {
             return optionalValue(forIdentifier: .fontSize)
@@ -362,9 +473,9 @@ class Preferences {
         set {
             setValue(forIdentifier: .fontSize, value: newValue)
         }
-        
+
     }
-    
+
     var extraFontName: String? {
         get {
             return optionalValue(forIdentifier: .extraFontName)
@@ -373,7 +484,7 @@ class Preferences {
             setValue(forIdentifier: .extraFontName, value: newValue)
         }
     }
-    
+
     var extraFontSize: Double? {
         get {
             return optionalValue(forIdentifier: .extraFontSize)
@@ -381,7 +492,7 @@ class Preferences {
         set {
             setValue(forIdentifier: .extraFontSize, value: newValue)
         }
-        
+
     }
     var manualSunrise: String? {
         get {
@@ -391,7 +502,7 @@ class Preferences {
             setValue(forIdentifier: .manualSunrise, value: newValue)
         }
     }
-    
+
     var manualSunset: String? {
         get {
             return optionalValue(forIdentifier: .manualSunset)
@@ -400,7 +511,7 @@ class Preferences {
             setValue(forIdentifier: .manualSunset, value: newValue)
         }
     }
-    
+
     var customCacheDirectory: String? {
         get {
             return optionalValue(forIdentifier: .customCacheDirectory)
@@ -418,7 +529,7 @@ class Preferences {
             setValue(forIdentifier: .versionCheck, value: newValue)
         }
     }
-    
+
     var descriptionCorner: Int? {
         get {
             return optionalValue(forIdentifier: .descriptionCorner)
@@ -427,7 +538,7 @@ class Preferences {
             setValue(forIdentifier: .descriptionCorner, value: newValue)
         }
     }
-    
+
     var extraCorner: Int? {
         get {
             return optionalValue(forIdentifier: .extraCorner)
@@ -436,7 +547,7 @@ class Preferences {
             setValue(forIdentifier: .extraCorner, value: newValue)
         }
     }
-    
+
     var fadeMode: Int? {
         get {
             return optionalValue(forIdentifier: .fadeMode)
@@ -454,7 +565,7 @@ class Preferences {
             setValue(forIdentifier: .fadeModeText, value: newValue)
         }
     }
-    
+
     var timeMode: Int? {
         get {
             return optionalValue(forIdentifier: .timeMode)
@@ -481,7 +592,7 @@ class Preferences {
             setValue(forIdentifier: .showDescriptionsMode, value: newValue)
         }
     }
-    
+
     var multiMonitorMode: Int? {
         get {
             return optionalValue(forIdentifier: .multiMonitorMode)
@@ -490,7 +601,7 @@ class Preferences {
             setValue(forIdentifier: .multiMonitorMode, value: newValue)
         }
     }
-    
+
     var showDescriptions: Bool {
         get {
             return value(forIdentifier: .showDescriptions)
@@ -500,31 +611,31 @@ class Preferences {
                      value: newValue)
         }
     }
-    
+
     func videoIsInRotation(videoID: String) -> Bool {
         let key = "remove\(videoID)"
         let removed = userDefaults.bool(forKey: key)
         return !removed
     }
-    
+
     func setVideo(videoID: String, inRotation: Bool,
                   synchronize: Bool = true) {
         let key = "remove\(videoID)"
         let removed = !inRotation
         userDefaults.set(removed, forKey: key)
-        
+
         if synchronize {
             self.synchronize()
         }
     }
-    
+
     // MARK: - Setting, Getting
-    
+
     fileprivate func value(forIdentifier identifier: Identifiers) -> Bool {
         let key = identifier.rawValue
         return userDefaults.bool(forKey: key)
     }
-    
+
     fileprivate func optionalValue(forIdentifier identifier: Identifiers) -> String? {
         let key = identifier.rawValue
         return userDefaults.string(forKey: key)
@@ -534,12 +645,12 @@ class Preferences {
         let key = identifier.rawValue
         return userDefaults.integer(forKey: key)
     }
-    
+
     fileprivate func optionalValue(forIdentifier identifier: Identifiers) -> Double? {
         let key = identifier.rawValue
         return userDefaults.double(forKey: key)
     }
-    
+
     fileprivate func setValue(forIdentifier identifier: Identifiers, value: Any?) {
         let key = identifier.rawValue
         if value == nil {
@@ -549,8 +660,8 @@ class Preferences {
         }
         synchronize()
     }
-    
+
     func synchronize() {
         userDefaults.synchronize()
     }
-}
+} //swiftlint:disable:this file_length
