@@ -136,32 +136,32 @@
         },
         {
             "id" : "b6-3",
-            "name" : "River Thames",
+            "name" : "Río Támesis",
             "pointsOfInterest" : {
-                "0" : "Passing the Gherkin in the City of London, on the right",
-                "15" : "Approaching Tower Bridge on the River Thames, with City Hall behind and the Tower of London to the right",
-                "40" : "Approaching HMS Belfast in the River Thames, passing the Walkie-Talkie on the right",
-                "75" : "Traveling west up the River Thames, with The Shard on the left and Saint Paul’s Cathedral on the right",
-                "95" : "Passing over Southwark Cathedral, with Saint Paul’s Cathedral on the right",
-                "130" : "Passing Shakespeare’s Globe in Southwark (right foreground)",
-                "195" : "Passing Waterloo Station on the left, with the Palace of Westminster (Houses of Parliament) across the Thames behind",
-                "210" : "Heading towards Westminster over the River Thames"
+                "0" : "Pasando el pepinillo en la ciudad de Londres, a la derecha",
+                "15" : "al acercarse al Tower Bridge en el río Támesis, con el Ayuntamiento detrás y la Torre de Londres a la derecha",
+                "40" : "Al acercarse al HMS Belfast en el río Támesis, pase el Walkie-Talkie a la derecha",
+                "75" : "Viajando hacia el oeste por el río Támesis, con el fragmento a la izquierda y la catedral de San Pablo a la derecha",
+                "95" : "Pasando por la catedral de Southwark, con la catedral de San Pablo a la derecha",
+                "130" : "Pasando el Globo de Shakespeare en Southwark (primer plano a la derecha)",
+                "195" : "Pasando la estación de Waterloo a la izquierda, con el Palacio de Westminster (Casas del Parlamento) a través del Támesis detrás",
+                "210" : "Dirigiéndose hacia Westminster sobre el río Támesis"
             }
         },
         {
             "id" : "b5-2",
-            "name" :"Buckingham Palace",
+            "name" :"El Palacio de Buckingham",
             "pointsOfInterest" : {
-                "0" : "Flying over Buckingham Palace and the Victoria Memorial, London",
-                "25" : "Passing Wellington Barracks on the right, following Birdcage Walk along Saint James’s Park",
-                "65" : "Passing over the Foreign & Commonwealth Office in Whitehall, with Horse Guards Parade on the left and Her Majesty’s Treasury on the right",
-                "75" : "Passing over the Cenotaph, with the Ministry of Defence on the left and Big Ben and the Palace of Westminster (Houses of Parliament) on the right",
-                "95" : "Crossing the River Thames, flying over the London Eye",
-                "130" : "Passing over Waterloo Station in South London",
-                "242" : "Passing Southwark Cathedral on the left",
-                "255" : "Passing The Shard on the right",
-                "275" : "Passing the cruiser HMS Belfast in the River Thames",
-                "300" : "Crossing the River Thames at Tower Bridge, with City Hall on the right and the Tower of London on the left"
+                "0" : "Volando sobre el Palacio de Buckingham y el Victoria Memorial, Londres",
+                "25" : "Pasando Wellington Barracks a la derecha, siguiendo Birdcage Walk por Saint James's Park",
+                "65" : "Pasando por la Oficina de Asuntos Exteriores y de la Commonwealth en Whitehall, con el Desfile de Guardias de Caballos a la izquierda y el Tesoro de Su Majestad a la derecha",
+                "75" : "Pasando el Cenotafio, con el Ministerio de Defensa a la izquierda y Big Ben y el Palacio de Westminster (Casas del Parlamento) a la derecha",
+                "95" : "Cruzando el río Támesis, volando sobre el London Eye",
+                "130" : "Pasando por la estación de Waterloo en el sur de Londres",
+                "242" : "Pasando la catedral de Southwark a la izquierda",
+                "255" : "Pasando The Shard a la derecha",
+                "275" : "Pasando el crucero HMS Belfast en el río Támesis",
+                "300" : "Cruzando el río Támesis en Tower Bridge, con el Ayuntamiento a la derecha y la Torre de Londres a la izquierda"
             }
         },
 
